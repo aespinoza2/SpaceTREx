@@ -46,4 +46,20 @@ plot(O_mol_fract_q,O_mol_fract_ext,'*')
 plot(H2_mol_fract_q,H2_mol_fract_ext,'*')
 plot(O2_mol_fract_q,O2_mol_fract_ext,'*')
 
+% Gamma values of water components
+gamma_H2O = 1.33;
+gamma_HO = 1.4;
+gamma_H = 1.67;
+gamma_O = 1.67;
+gamma_H2 = 1.4;
+gamma_O2 = 1.4;
+
+% Molecular weights of water components
+m_H2O = 18.016; % kg/kmol
+m_OH = 18.0135;
+m_H = 0;
+m_O = 0;
+m_H2 = 0;
+m_O2 = 0;
+
 

@@ -22,7 +22,7 @@ H2_mol_fract_q = 0:50:4500;
 O2_mol_fract_q = 0:50:4500;
 
 % Define new x axis based on steps above
-x_Temp_ext = H2O_mol_fract_q;
+x_Temp_Int = H2O_mol_fract_q;
 
 % Interpolate the function
 H2O_mol_fract_ext = interp1(x_Temp, H2O_mol_fract, H2O_mol_fract_q, 'linear');
@@ -75,7 +75,12 @@ G_earth = 9.81; % m/s^2
 % k values
 for i = 1:length(H2O_mol_fract_ext)
     % Value used to calculate the n_t
-    k(i) = H2O_mol_fract_ext(i) * m_H2O + HO_mol_fract_ext(i) * m_HO + H_mol_fract_ext(i) * m_H + O_mol_fract_ext(i) * m_O + H2_mol_fract_ext(i) * m_H2 + O2_mol_fract_ext(i) * m_O2;
+    k(i) = H2O_mol_fract_ext(i) * m_H2O + ...
+        HO_mol_fract_ext(i) * m_HO + ...
+        H_mol_fract_ext(i) * m_H + ...
+        O_mol_fract_ext(i) * m_O + ...
+        H2_mol_fract_ext(i) * m_H2 + ...
+        O2_mol_fract_ext(i) * m_O2;
     
     % Total number of moles in mixture
     n_t(i) = m_H2O / k(i);
@@ -129,7 +134,12 @@ for i = 1:length(H2O_mol_fract_ext)
     end
     
     % Calculating the energy gain stepwise with temperature
-    dq(i) = (((R * n_H2O(i)) / (gamma_H2O - 1)) * dT(i) + dn_H2O(i) * H2O_sse) + (((R * n_HO(i)) / (gamma_HO - 1)) * dT(i) + dn_HO(i) * HO_sse) + (((R * n_H(i)) / (gamma_H - 1)) * dT(i) + dn_H(i) * H_sse) + (((R * n_O(i)) / (gamma_O - 1)) * dT(i) + dn_O(i) * O_sse) + (((R * n_H2(i)) / (gamma_H2 - 1)) * dT(i) + dn_H2(i) * H2_sse) + (((R * n_O2(i)) / (gamma_O2 - 1)) * dT(i) + dn_O2(i) * O2_sse);
+    dq(i) = (((R * n_H2O(i)) / (gamma_H2O - 1)) * dT(i) + dn_H2O(i) * H2O_sse) + ...
+        (((R * n_HO(i)) / (gamma_HO - 1)) * dT(i) + dn_HO(i) * HO_sse) + ...
+        (((R * n_H(i)) / (gamma_H - 1)) * dT(i) + dn_H(i) * H_sse) + ...
+        (((R * n_O(i)) / (gamma_O - 1)) * dT(i) + dn_O(i) * O_sse) + ...
+        (((R * n_H2(i)) / (gamma_H2 - 1)) * dT(i) + dn_H2(i) * H2_sse) + ...
+        (((R * n_O2(i)) / (gamma_O2 - 1)) * dT(i) + dn_O2(i) * O2_sse);
     
     % Convert from J/mol to J/kg
     dq(i) = dq(i) / 0.018; % kg/mol
@@ -139,12 +149,7 @@ end
 
 % Plot component mole fractions vs temperataure
 figure
-plot(x_Temp,H2O_mol_fract,'k', ...
-    x_Temp,HO_mol_fract, ...
-    x_Temp,H_mol_fract, ...
-    x_Temp,O_mol_fract, ...
-    x_Temp,H2_mol_fract, ...
-    x_Temp,O2_mol_fract);
+plot(x_Temp,H2O_mol_fract, x_Temp,HO_mol_fract, x_Temp,H_mol_fract, x_Temp,O_mol_fract, x_Temp,H2_mol_fract, x_Temp,O2_mol_fract);
 title('Mole Fraction vs Temperature');
 xlabel('Temperature [K]');
 ylabel('Component Mole Fraction [mol]');
@@ -152,7 +157,7 @@ legend({'H2O', 'HO', 'H', 'O', 'H2', 'O2'}, 'Location','southwest');
 
 % Plot ISP vs Temperature
 figure
-plot(x_Temp_ext, ISP, 'k');
+plot(x_Temp_ext, ISP);
 title('Specific Impulse vs Temperature');
 xlabel('Temperature [K]');
 ylabel('Specific Impulse [s]');

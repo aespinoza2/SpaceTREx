@@ -3,6 +3,8 @@ mole_fract_matrix = csvread("mole_fract.csv");
 
 % Temperature array
 x_Temp = mole_fract_matrix(:,1); 
+
+% Initial temperature value
 T_0 = 0; % Kelvin
 
 % Mole Fractions
@@ -14,12 +16,12 @@ H2_mol_fract = mole_fract_matrix(:,6);
 O2_mol_fract = mole_fract_matrix(:,7);
 
 % Define the accuracy/steps
-H2O_mol_fract_q = 0:50:4500;
-HO_mol_fract_q = 0:50:4500;
-H_mol_fract_q = 0:50:4500;
-O_mol_fract_q = 0:50:4500;
-H2_mol_fract_q = 0:50:4500;
-O2_mol_fract_q = 0:50:4500;
+H2O_mol_fract_q = 1000:50:4500;
+HO_mol_fract_q = 1000:50:4500;
+H_mol_fract_q = 1000:50:4500;
+O_mol_fract_q = 1000:50:4500;
+H2_mol_fract_q = 1000:50:4500;
+O2_mol_fract_q = 1000:50:4500;
 
 % Define new x axis based on steps above
 x_Temp_Int = H2O_mol_fract_q;

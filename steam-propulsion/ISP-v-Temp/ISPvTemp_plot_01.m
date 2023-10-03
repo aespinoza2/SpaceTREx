@@ -100,14 +100,16 @@ for i = 1:length(H2O_mol_fract_ext)
 end
 
 % Preallocate arrays
-dT = zeros(1,91);
-dn_H2O = zeros(1,91);
-dn_HO = zeros(1,91);
-dn_H = zeros(1,91);
-dn_O = zeros(1,91);
-dn_H2 = zeros(1,91);
-dn_O2 = zeros(1,91);
-ISP = zeros(1,91);
+dT = zeros(length(n_t));
+dn_H2O = zeros(length(n_t));
+dn_HO = zeros(length(n_t));
+dn_H = zeros(length(n_t));
+dn_O = zeros(length(n_t));
+dn_H2 = zeros(length(n_t));
+dn_O2 = zeros(length(n_t));
+ISP = zeros(length(n_t));
+q = zeros(length(n_t));
+dq_conv = zeros(length(n_t));
 
 % dq values
 for i = 1:length(H2O_mol_fract_ext)
@@ -122,6 +124,11 @@ for i = 1:length(H2O_mol_fract_ext)
         dn_O(i) = 0;
         dn_H2(i) = 0;
         dn_O2(i) = 0;
+
+
+        q(i) = ((R / (gamma_H2O - 1)) * 1000) / 0.018;
+
+        ISP(i) = sqrt(2 * q(i)) / G_earth;
     else 
         % Chamge in Temperature from 0 to the interpolated temperature val
         dT(i) = x_Temp_Int(i) - x_Temp_Int(i-1);
@@ -133,20 +140,21 @@ for i = 1:length(H2O_mol_fract_ext)
         dn_O(i) = n_O(i) - n_O(i-1);
         dn_H2(i) = n_H2(i) - n_H2(i-1);
         dn_O2(i) = n_O2(i) - n_O2(i-1);
-    end
     
-    % Calculating the energy gain stepwise with temperature
-    dq(i) = (((R * n_H2O(i)) / (gamma_H2O - 1)) * dT(i) + dn_H2O(i) * H2O_sse) + ...
+        % Calculating the energy gain stepwise with temperature
+        dq(i) = (((R * n_H2O(i)) / (gamma_H2O - 1)) * dT(i) + dn_H2O(i) * H2O_sse) + ...
         (((R * n_HO(i)) / (gamma_HO - 1)) * dT(i) + dn_HO(i) * HO_sse) + ...
         (((R * n_H(i)) / (gamma_H - 1)) * dT(i) + dn_H(i) * H_sse) + ...
         (((R * n_O(i)) / (gamma_O - 1)) * dT(i) + dn_O(i) * O_sse) + ...
         (((R * n_H2(i)) / (gamma_H2 - 1)) * dT(i) + dn_H2(i) * H2_sse) + ...
         (((R * n_O2(i)) / (gamma_O2 - 1)) * dT(i) + dn_O2(i) * O2_sse);
-    
-    % Convert from J/mol to J/kg
-    dq(i) = dq(i) / 0.018; % kg/mol
 
-    ISP(i) = sqrt(2 * dq(i)) / G_earth;
+        dq_conv(i) = dq(i) / 0.018;
+        
+        q(i) = q(i - 1) + dq_conv(i);
+
+        ISP(i) = sqrt(2 * q(i)) / G_earth;
+    end
 end
 
 % Plot component mole fractions vs temperataure
@@ -159,7 +167,16 @@ legend({'H2O', 'HO', 'H', 'O', 'H2', 'O2'}, 'Location','southwest');
 
 % Plot ISP vs Temperature
 figure
-plot(x_Temp_ext, ISP);
+plot(x_Temp_Int, ISP);
 title('Specific Impulse vs Temperature');
 xlabel('Temperature [K]');
 ylabel('Specific Impulse [s]');
+
+figure
+plot(x_Temp_Int, q);
+% hold on
+% plot(x_Temp_Int, n_HO)
+% plot(x_Temp_Int, n_H);
+% plot(x_Temp_Int, n_O);
+% plot(x_Temp_Int, n_H2);
+% plot(x_Temp_Int, n_O2)

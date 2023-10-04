@@ -1,7 +1,7 @@
 % Import mole fractions from mole fractions CSV
 mole_fract_matrix = csvread("mole_fract.csv");
 
-% Temperature array
+% Create temperature array from mole fraction matrix
 x_Temp = mole_fract_matrix(:,1); 
 
 % Initial temperature value
@@ -125,7 +125,6 @@ for i = 1:length(H2O_mol_fract_ext)
         dn_H2(i) = 0;
         dn_O2(i) = 0;
 
-
         q(i) = ((R / (gamma_H2O - 1)) * 1000) / 0.018;
 
         ISP(i) = sqrt(2 * q(i)) / G_earth;
@@ -157,7 +156,7 @@ for i = 1:length(H2O_mol_fract_ext)
     end
 end
 
-% Plot component mole fractions vs temperataure
+% Plot Component Mole Fractions vs Temperataure
 figure
 plot(x_Temp,H2O_mol_fract, x_Temp,HO_mol_fract, x_Temp,H_mol_fract, x_Temp,O_mol_fract, x_Temp,H2_mol_fract, x_Temp,O2_mol_fract);
 title('Mole Fraction vs Temperature');
@@ -168,15 +167,13 @@ legend({'H2O', 'HO', 'H', 'O', 'H2', 'O2'}, 'Location','southwest');
 % Plot ISP vs Temperature
 figure
 plot(x_Temp_Int, ISP);
-title('Specific Impulse vs Temperature');
+title('Specific Impulse (Isp) vs Temperature');
 xlabel('Temperature [K]');
 ylabel('Specific Impulse [s]');
 
+% Plot Q vs Temperature
 figure
 plot(x_Temp_Int, q);
-% hold on
-% plot(x_Temp_Int, n_HO)
-% plot(x_Temp_Int, n_H);
-% plot(x_Temp_Int, n_O);
-% plot(x_Temp_Int, n_H2);
-% plot(x_Temp_Int, n_O2)
+title('Energy (Q) vs Temperature');
+xlabel('Temperature [K]');
+ylabel('Energy [J/Kg]');
